@@ -1,0 +1,261 @@
+:root {
+    --primary-green: #2d5a27;
+    --bg-light-green: #4b7240;
+    --primary-green-transparent: #2d5a271d;
+    --light-green: #e8f5e9;
+    --gold: #c5a059;
+    --gold-transparent: #dbc08f27;
+    --text-dark: #333;
+    --bg-dark: #282828;
+    --bg-color: #f4f7f6;
+    --bg-white: #ddd;
+    --warning: #c57659;
+    --blue: #007BFF;
+    --light-blue: #34608f;
+    --shadow: rgba(0,0,0,0.05);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.main-header {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 3rem 1rem;
+    text-align: center;
+    border-bottom: 5px solid var(--gold);
+}
+
+.app-name {
+    font-size: 2.4rem;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1200px;
+    margin: -30px auto 20px;
+    padding: 0 1rem;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px var(--shadow);
+    border-right: 5px solid var(--gold);
+}
+
+.feature-card h3 {
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+}
+h4{
+    color: var(--gold);
+    margin-top: 10px;
+}
+a{
+    text-decoration: none;
+}
+
+.slogan{
+    font-size: 1.2rem;
+    color: #ccc;
+
+}
+
+.how-to-use {
+    text-align: center;
+    padding-bottom: 3rem;
+}
+
+.how-to-use h2 {
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+}
+
+.how-to-use p {
+    margin-bottom: 2rem;
+    color: #555;
+}
+
+.install-btn {
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px var(--primary-green-transparent);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.install-btn:hover {
+    background-color: #1e3d1a;
+    transform: scale(1.05);
+}
+
+
+.links-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.links-container span a {
+    text-decoration: none;
+    color: #c5a059;
+}
+/* new */
+.btns-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+a{
+    text-decoration: none;
+}
+.btn{
+    height: 35px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.refresh-btn{
+    background-color: var(--light-blue);
+}
+.copy-btn, .add-btn{
+    background-color: var(--bg-light-green);
+}
+.clear-btn{
+    background-color: var(--warning);
+}
+.cards-link{
+    background-color: var(--gold);
+}
+.input-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.label{
+    width: 160px;
+    color: var(--bg-dark);
+}
+
+/* Table Styling */
+.table-container { 
+    width: 100%; 
+    overflow-x: auto; 
+    background: white; 
+    border-radius: 8px; 
+
+}
+table { 
+    width: 100%; 
+    /* min-width: 400px;  */
+    border-collapse: collapse; 
+}
+th, td { 
+    border-bottom: 1px solid #ddd; 
+    padding: 15px; 
+    text-align: right; 
+    cursor: pointer; 
+
+}
+tr:hover {  
+    background-color: #f9f9f9; 
+}
+.cell{
+    font-size: 0.7rem;
+    min-width: 100px;
+}
+
+/* Modal & UI */
+dialog { 
+    border: none;
+    border: 5px solid var(--warning);
+    border-radius: 12px; 
+    width: 90%; 
+    max-width: 400px; 
+    padding: 20px; 
+    margin: auto;
+}
+input { 
+    height: 35px;
+    width: 100%; 
+    padding: 12px; 
+    margin: 10px 0; 
+    box-sizing: border-box; 
+}
+.close-btn{
+    border: none;
+    background-color: transparent;
+    color: #c57659;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.hidden { 
+    display: none; 
+}
+
+#detailView{
+    width: 60%;
+    max-width: 1000px;
+    min-width: 345px;
+    margin: auto;
+    margin-bottom: 30px;
+    position: relative;
+}
+#detailView input{
+    width: 50% !important;
+    /* max-width: 190px; */
+} 
+ .dContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 10px;
+    gap: 10px;
+ }
+.detail-card strong{
+    width: fit-content;
+}
+.back-btn{
+    background-color: transparent;
+    color: #007BFF;
+    position: absolute;
+    top: 1.5rem;
+    left: 10%;
+    padding: 0;
+    width: fit-content;
+    overflow-x: visible;
+}
+.copy-report-header{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: start;
+}
