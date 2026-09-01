@@ -6,6 +6,7 @@ const localStorageObj ={
 }
 const group = localStorageObj.groups[localStorageObj.groupIndex]
 const cardsElements = {
+    groupName: document.querySelector('.group-name'),
     addCardBtn: document.querySelector('#add-card'),
     selectInput: document.querySelector('#names'),
     cardsContainer: document.querySelector('.cards-container'),
@@ -13,7 +14,7 @@ const cardsElements = {
     clearCards: document.querySelector('#clear-cards')
 }
 cardsElements.selectInput.innerHTML = ''
-
+cardsElements.groupName.innerHTML = ` مجموعة <b>${group.name}</b> `
 //=========== Feed the select input 
 
 group.logs.forEach((log, index) => {
