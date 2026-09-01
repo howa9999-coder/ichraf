@@ -75,6 +75,10 @@ select{
     cursor: pointer;
     width: fit-content;
 }
+.close-btn:hover {
+    background-color: rgba(197, 118, 89, 0.15);
+    color: #a35338;
+}
 .card-number{
     color: var(--primary-green);
     font-size: 1rem;
