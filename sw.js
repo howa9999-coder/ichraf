@@ -10,15 +10,18 @@ const cacheName = 'ichraf-v0006';
 const assets = [
     './index.html',        // Main page
     './cards.html',         // Ahzab page
+   './group.html',
 
     './css/main.css',     // Styles for Ahzab
     './css/cards.css',     // Global styles
+   './css/home.css',
 
     './js/main.js',       // Ahzab logic
     './js/cards.js',        // Main app logic
+   './js/home.js',
 
-    './images/repeat.png',     // UI icon
-    './images/repeat192.png',  // App icon
+    './images/admin512.png',     // UI icon
+    './images/admin192.png',  // App icon
 
     './manifest.json'      // PWA manifest
 ];
