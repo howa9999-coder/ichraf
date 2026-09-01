@@ -23,6 +23,7 @@ const elements = {
     saveBtn: document.querySelector('#save-btn'),
     deleteBtn: document.querySelector('#delete-btn'),
     copyBtn: document.querySelector('#copy-btn'),
+    copyMuaskarBtn: document.querySelector('#copy-muaskar-btn'),
     entryModal: document.getElementById('entryModal'),
     howToUse: document.querySelector('.how-to-use')
 }
@@ -192,6 +193,21 @@ elements.copyBtn.addEventListener('click', ()=>{
     reportCopied(header, body, footer)
 
 })
+elements.copyMuaskarBtn.addEventListener('click', ()=>{
+    let logs = group.logs
+    const header = muaskarHeader()
+    let body =``
+    logs.forEach(student=>{
+        body +=`
+        ☀️ الطالبة : ${student.name}    
+        نقطة المعسكر: ${student.fullReview}
+        `
+    })
+    const footer = muaskarFooter()
+
+    reportCopied(header, body, footer)
+
+})
 function reportHeader(){
     let groupName = group.name
     let admin = localStorageObj.admin
@@ -207,6 +223,22 @@ function reportHeader(){
     `
     return header
 }
+function muaskarHeader(){
+    let teacher = group.teacher
+    let admin = localStorageObj.admin
+    const header = `
+    ⛱️ تقرير المعسكر الصيفي ⛱️ 
+    
+     💕 مجموعة الأستاذة :${teacher}  
+     💕 المُشرفة : ${admin} 
+     __________
+
+    ⭕ تنقيط الطّالبات ⭕  
+    \n
+    `
+    return header
+}
+
 function reportFooter(){
     let teacher = group.teacher
     const footer = `
@@ -218,6 +250,15 @@ function reportFooter(){
         
         ➖➖➖➖➖➖➖
         تاج الوقار؛ حلمٌ يُدرك بالإخلاص والتعاهد والتكرار
+    `
+    return footer
+}
+function muaskarFooter(){
+    const footer = `
+    \n
+    __________
+    
+    تاج الوقار؛ حلمٌ يُدرك بالإخلاص والتعاهد والتكرارتاج الوقار؛ حلمٌ يُدرك بالإخلاص والتعاهد والتكرار
     `
     return footer
 }
