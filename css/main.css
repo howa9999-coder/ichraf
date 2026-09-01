@@ -58,7 +58,8 @@ body {
 
 .feature-card h3 {
     color: var(--primary-green);
-    margin-bottom: 1rem;
+    width: 90%;
+    text-align: center;
 }
 h4{
     color: var(--gold);
@@ -216,7 +217,10 @@ input {
     font-weight: 600;
     cursor: pointer;
 }
-
+.close-btn:hover {
+    background-color: rgba(197, 118, 89, 0.15);
+    color: #a35338;
+}
 .hidden { 
     display: none; 
 }
@@ -258,4 +262,29 @@ input {
     justify-content: space-between;
     gap: 20px;
     align-items: start;
+}
+.card-header{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.data-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* Make it stack on mobile */
+@media (max-width: 768px) {
+    .data-container{
+        grid-template-columns: 1fr;
+    }
 }
