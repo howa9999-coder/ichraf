@@ -1,65 +1,6 @@
-// ============================================================
-// PWA INSTALL BUTTON LOGIC
-// ============================================================
-
-// Select the install button
-const installBtn = document.querySelector('#install-btn');
-
-// Store the deferred prompt so we can trigger it later
- let deferredPrompt = null; 
-
-// Listen for the "beforeinstallprompt" event
-window.addEventListener("beforeinstallprompt", (installEvent) => {
-    // Prevent the browser from automatically showing the prompt
-    installEvent.preventDefault();
-
-    // Remove "display: none" inline style to show the button
-    installBtn.style.removeProperty('display');
-
-    // Save the event for later use
-    deferredPrompt = installEvent;
-}); 
-
-// When the user clicks the install button
-installBtn.addEventListener("click", () => {
-    if (deferredPrompt) {
-        // Show the install prompt
-        deferredPrompt.prompt();
-
-        // Wait for the user's choice
-        deferredPrompt.userChoice.then((choice) => {
-            if (choice.outcome === "accepted") {
-                console.log('User accepted installation');
-                // Hide the install button after install
-                installBtn.style.display = "none";
-            } else {
-                console.log('User refused installation');
-            }
-        });
-
-        // Reset the deferred prompt
-        deferredPrompt = null;
-    }
-}); 
-
-// ============================================================
-// SERVICE WORKER REGISTRATION
-// ============================================================
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register("./sw.js")
-        .then((reg) => {
-            console.log("Service Worker registered:", reg);
-        })
-        .catch((err) => {
-            console.log("Service Worker registration failed:", err);
-        });
-}
-
-
 const elements = {
     tableBody : document.getElementById('tableBody'),
-    name : document.getElementById('name'),
+    studentName : document.getElementById('name'),
     inputsContainer : document.querySelector('.inputs-container'),
     groupInput: document.querySelector('#group-name'),
     teacherInput: document.querySelector('#teacher'),
@@ -87,29 +28,30 @@ const elements = {
 }
 
 let localStorageObj = {
-    logs : JSON.parse(localStorage.getItem('logs')) || [],
-    cards: JSON.parse(localStorage.getItem('cards')) || [],
-    groupName : JSON.parse(localStorage.getItem('groupName')) || null,
-    teacher : JSON.parse(localStorage.getItem('teacher')) || null,
+    groups : JSON.parse(localStorage.getItem('groups')) || null,
     admin : JSON.parse(localStorage.getItem('admin')) || null,
-    week : JSON.parse(localStorage.getItem('week')) || null,
-    index : JSON.parse(localStorage.getItem('index')) || 0,
-
+    groupIndex : JSON.parse(localStorage.getItem('groupIndex')) || 0,
 }
 
-let index = null
-elements.groupInput.value = localStorageObj.groupName 
-elements.teacherInput.value = localStorageObj.teacher 
-elements.adminInput.value = localStorageObj.admin 
-elements.weekInput.value = localStorageObj.week 
+const group = localStorageObj.groups[localStorageObj.groupIndex]
+/* INPUTS ELEMENTS AND VALUES */
+elements.groupInput.value = group.name 
+elements.teacherInput.value = group.teacher
+/* elements.adminInput.value = localStorageObj.admin || null */
+elements.weekInput.value = group.week || null 
+elements.teacherInput.addEventListener('change', ()=>{
+    group.teacher = elements.teacherInput.value
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups))
+})
+elements.weekInput.addEventListener('change', ()=>{
+    group.week = elements.weekInput.value
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups))
+})
 
-if(localStorageObj.logs.length>0){
-    renderTable()
-}
-/* Add new student */
+/* ADD NEW STUDENT AND DISPLAY ALL STUDENT IN THE TABLE */
 function addStudent() {
     const entry = {
-        name: elements.name.value,
+        name: elements.studentName.value,
         hifz: 0,
         tafsir: 0,
         review: 0,
@@ -122,50 +64,23 @@ function addStudent() {
         fullReview: 0
     };
     const entryCards = {
-        name: elements.name.value,
+        name: elements.studentName.value,
         cards: []
     }
-    localStorageObj.logs.push(entry);
-    localStorage.setItem('logs', JSON.stringify(localStorageObj.logs));
-    localStorageObj.cards.push(entryCards);
-    localStorage.setItem('cards', JSON.stringify(localStorageObj.cards));
+    group.logs.push(entry);
+    group.cards.push(entryCards);
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups));
     renderTable();
-    elements.name.value= ''
+    elements.studentName.value= '';
     elements.entryModal.close();
 }
-/* Reset Data */
-elements.refreshBtn.addEventListener('click', ()=>{
-    localStorageObj.logs.forEach(student => {
-        for(let key in student){
-            if(key != 'name'){
-                student[key] = 0
-            }
-        }
-    })
-    localStorage.setItem('logs', JSON.stringify(localStorageObj.logs))
-    localStorageObj.cards.forEach(studentCards => {
-        studentCards.cards = []
-    })
-    localStorage.setItem('cards', JSON.stringify(localStorageObj.cards))
-    renderTable()
-})
-/* Clear table: delete all students */
-elements.clearTable.addEventListener('click', ()=>{
-    localStorageObj.logs = []
-    localStorage.removeItem('logs')
-    localStorageObj.cards = []
-    localStorage.removeItem('cards')
-    localStorage.removeItem('index')
-    renderTable()
-})
-
 /*  Display Table with data */
 function renderTable() {
     elements.tableBody.innerHTML = '';
     
-    localStorageObj.logs.forEach((log, index) => {
+    group.logs.forEach((log, index) => {
         const row = elements.tableBody.insertRow();
-        const cardsNum = localStorageObj.cards[index].cards.length
+        const cardsNum = group.cards[index].cards.length
         row.innerHTML = `<td>${cardsNum}</td><td>${log.name}</td>
         <td class='cell'><strong>${log.hifz}</strong> + ${log.hifzCatchUp}</td>
         <td class='cell'><strong>${log.tafsir}</strong> + ${log.tafsirCatchUp}</td>
@@ -177,11 +92,13 @@ function renderTable() {
         row.onclick = () => showDetails(index);
     });
 }
+renderTable()
+//================> continue edit student, delete student, refresh btn, go to cards
 /* Student card: disply, edit, delete */
 function showDetails(index) {
-    const students = localStorageObj.logs
+    const students = group.logs
     const student = students[index];
-    const cards = localStorageObj.cards
+    const cards = group.cards
     index = index
     //DO: ADD CATCHUP TO INPUT (HOW TO ADD TWO VALUES AT SAME TIME TO INPUT) OR CHANGE TAG
     elements.studentInput.value = student.name;
@@ -197,54 +114,68 @@ function showDetails(index) {
     elements.listReview.classList.add('hidden');
     elements.detailView.classList.remove('hidden');
     elements.inputsContainer.classList.add('hidden')
-    elements.howToUse.classList.add('hidden')
-    elements.saveBtn.onclick = ()=>{
-        students[index].name = elements.studentInput.value
-        students[index].course = elements.course.value
-        students[index].tajwid = elements.tajwid.value
-        students[index].tajwidCatchUp = elements.tajwidCatchUp.value
-        localStorage.setItem('logs', JSON.stringify(students));
-    }
-    elements.deleteBtn.onclick = ()=>{
-        /* delete an element from an array */
+    elements.saveBtn.addEventListener('click', ()=> saveStudentChanges(students, cards, index))
+
+    elements.deleteBtn.addEventListener('click', ()=> deleteStudent(students, cards, index))
+}
+
+//WHY WHEN  CLICK ON CHANGE THE SECOND TIME ALL ROWS BECOMES SIMILAR TO THE CHANGED ONE
+function saveStudentChanges(students,cards, index){
+    students[index].name = elements.studentInput.value
+    cards[index].name = elements.studentInput.value
+    students[index].course = elements.course.value
+    students[index].tajwid = elements.tajwid.value
+    students[index].tajwidCatchUp = elements.tajwidCatchUp.value
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups));
+}
+
+function deleteStudent(students, cards, index){
         students.splice(index, 1)
-        localStorage.setItem('logs', JSON.stringify(students))
         cards.splice(index, 1)
-        localStorage.setItem('cards', JSON.stringify(cards))
-        console.log(Number(localStorageObj.index))
+        localStorage.setItem('groups', JSON.stringify(localStorageObj.groups))
         // TO CHANGE INDEX VALUE IN LOCALSTORAGE IF IT IS HIGHER THAN CARDS LENGTH - 1
-        if(cards.length-1<Number(localStorageObj.index)){
+/*         if(cards.length-1<Number(localStorageObj.index)){
             localStorageObj.index = 0
             localStorage.setItem('index', JSON.stringify(localStorageObj.index))
-        }
-    }
+        } */
+       renderTable()
 }
 
 function showList() {
     elements.listReview.classList.remove('hidden');
     elements.inputsContainer.classList.remove('hidden')
     elements.detailView.classList.add('hidden');
-    elements.howToUse.classList.remove('hidden')
+    //elements.howToUse.classList.remove('hidden')
     renderTable();
 }
 
- elements.groupInput.addEventListener('input', function(){
-    localStorage.setItem('groupName', JSON.stringify(elements.groupInput.value));
- })
- elements.teacherInput.addEventListener('input', function(){
-    localStorage.setItem('teacher', JSON.stringify(elements.teacherInput.value));
- })
-  elements.adminInput.addEventListener('input', function(){
-    localStorage.setItem('admin', JSON.stringify(elements.adminInput.value));
- })
-  elements.weekInput.addEventListener('input', function(){
-    localStorage.setItem('week', JSON.stringify(elements.weekInput.value));
- })
+/* Reset Data */
+elements.refreshBtn.addEventListener('click', ()=>{
+    group.logs.forEach(student => {
+        for(let key in student){
+            if(key != 'name'){
+                student[key] = 0
+            }
+        }
+    })
+    group.cards.forEach(studentCards => {
+        studentCards.cards = []
+    })
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups))
+    renderTable()
+})
+/* Clear table: delete all students */
+elements.clearTable.addEventListener('click', ()=>{
+    group.logs = []
+    group.cards = []
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups))   
+    renderTable()
+})
 
 // TO COPY REPORT 
 // add an other for moaaskar report
 elements.copyBtn.addEventListener('click', ()=>{
-    let logs = localStorageObj.logs
+    let logs = group.logs
     const header = reportHeader()
     let body =``
     logs.forEach(student=>{
@@ -263,9 +194,9 @@ elements.copyBtn.addEventListener('click', ()=>{
 
 })
 function reportHeader(){
-    let teacher = localStorageObj.teacher
+    let teacher = group.teacher
     let admin = localStorageObj.admin
-    let week = localStorageObj.week
+    let week = group.week
     const header = `
     الأسبوع: ${week}
     المشرفة: ${admin}
