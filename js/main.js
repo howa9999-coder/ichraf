@@ -179,35 +179,50 @@ elements.copyBtn.addEventListener('click', ()=>{
     const header = reportHeader()
     let body =``
     logs.forEach(student=>{
-        body += `
-        _${student.name}:_
-        - الحفظ: ${student.hifz} + ${student.hifzCatchUp}
-        - التفسير: ${student.tafsir} + ${student.tafsirCatchUp}
-        - المراجعة: ${student.review} + ${student.reviewCatchUp}
-        - الحصة: ${student.course}
-        - التجويد: ${student.tajwid} + ${student.tajwidCatchUp}
-        -------------------------
+        body +=`
+       ⭐ اسم الطالبة :  ${student.name}
+         نقطة الحفظ: ${student.hifz} + ${student.hifzCatchUp}
+        نقطة المراجعة: ${student.review} + ${student.reviewCatchUp} 
+        نقطة الحصة: ${student.course}
+        درس التجويد: ${student.tajwid} + ${student.tajwidCatchUp}
         `
     })
+    const footer = reportFooter()
 
-    reportCopied(header, body)
+    reportCopied(header, body, footer)
 
 })
 function reportHeader(){
-    let teacher = group.teacher
+    let groupName = group.name
     let admin = localStorageObj.admin
     let week = group.week
     const header = `
-    الأسبوع: ${week}
-    المشرفة: ${admin}
-    الأستاذة: ${teacher}
-    ----------------------
-    \n
+        📜 الأسبوع: ${week}📜
+    
+        🪶 اسم المُشرفة : ${admin}
+        
+        🌸 اسم المجموعة: ${groupName}🌸
+        ➖➖➖➖➖➖➖
+        \n
     `
     return header
 }
-function reportCopied(header, body){
-    navigator.clipboard.writeText(header + body).then(()=>{
+function reportFooter(){
+    let teacher = group.teacher
+    const footer = `
+    \n
+        ➖➖➖➖➖➖➖
+       ⭕  ${teacher} الأستاذة ⭕ 
+        تم تصحيح الاستظهار: نعم
+        تمت الحصة الأسبوعية: نعم
+        
+        ➖➖➖➖➖➖➖
+        تاج الوقار؛ حلمٌ يُدرك بالإخلاص والتعاهد والتكرار
+    `
+    return footer
+}
+function reportCopied(header, body, footer){
+    navigator.clipboard.writeText(header + body + footer).then(()=>{
         alert('تم نسخ التقرير بنجاح!')
     }).catch(err =>{
         alert('failed to copy: ', err)
