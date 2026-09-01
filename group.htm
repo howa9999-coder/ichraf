@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main.css">
+<!--     <link rel="manifest" href="manifest.json"> -->
+    <title>المعين - الصفحة الرئيسية</title>
+</head>
+<body>
+
+    <header class="main-header">
+        <h1 class="app-name"> المعين على الإشراف</h1>
+        <p class="slogan">رفيقك في خدمة القرآن</p>
+    </header>
+
+    <main class="container">
+        <!-- buttons container card -->
+        <section class="feature-card">
+            <div class="feature-info btns-container">
+                <a href="home.htm" class="btn cards-link" style="background-color: #c57659;">المجموعات</a>
+                <a href="cards.htm" class="btn cards-link">البطاقات</a>
+                <button onclick="document.getElementById('copyReport').showModal()" class="btn copy-btn" >التقرير</button>
+            </div>
+        </section>
+        <!-- inputs section -->
+        <section class="feature-card inputs-container">
+            <div class="feature-info">
+                <div class="input-container">
+                    <label class="label" for="group-name">إسم المجموعة</label>
+                    <input type="text" id="group-name">
+                </div>
+                <div class="input-container">
+                    <label for="teacher" class="label" >إسم الأستاذة</label>
+                    <input type="text" id="teacher">
+                </div>
+                <div class="input-container">
+                    <label for="week" class="label">رقم الأسبوع</label>
+                    <input type="number" id="week">
+                </div>
+            </div>
+        </section>
+        <!-- logs section -->
+        <section class="feature-card" id="listView">
+            <div class="feature-info">
+                <h3 style="margin-bottom: 10px;"> سجل الطالبات</h3>
+                <div class="btns-container" >
+                    <button class="btn add-btn" onclick="document.getElementById('entryModal').showModal()">إضافة</button>
+                    <button class="btn refresh-btn" id="refresh-btn">إعادة الضبط</button>
+                    <button class="btn clear-btn"  id="clear-table">حذف</button>
+                </div>
+                <div class="table-container" style="margin-top: 15px;">
+                    <table id="logTable">
+                        <thead>
+                            <tr><th>#</th><th>الإسم</th><th>الحفظ</th><th>التفسير</th><th>المراجعة</th><th>درس التجويد</th><th>الحصة</th><th>المراجعة التامة</th></tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>                
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Add New Student -->
+    <dialog id="entryModal">
+        <h3>طالبة جديدة</h3>
+        <input type="text" id="name" placeholder=" إسم الطالبة">
+        <button class="btn add-btn " style="margin-bottom: 10px;" onclick="addStudent()">حفظ</button>
+        <button class="btn close-btn"  onclick="document.getElementById('entryModal').close()">إلغاء</button>
+    </dialog> 
+
+    <dialog id="copyReport">
+        <div class="copy-report-header">
+            <button class="btn close-btn" style="width: fit-content;" onclick="document.getElementById('copyReport').close()" >X</button>
+            <h3>المرجو الضغط على نوعية التقرير المراد إنجازها للنسخ.</h3>
+        </div>
+        <button class="btn copy-btn" onclick="document.getElementById('copyReport').close()" id="copy-btn" style="margin-top: 15px;">تقرير أسبوعي</button>
+        <button class="btn refresh-btn" onclick="document.getElementById('copyReport').close()" style="margin-top: 15px;" >تقرير المعسكر</button>
+    </dialog>
+    <!-- Student Card -->
+    <div id="detailView" class="hidden feature-card">
+        <div class="card-header">
+            <button class="btn close-btn" style="width: fit-content;"  onclick="showList()">X</button>
+            <h3>بطاقة الطالبة</h3>
+        </div>
+        <hr style="margin-bottom: 10px;">
+        <div class="detail-card">
+            <div class="data-container">
+                <!-- Tafsir and hifz and review to be not editable -->
+                <div>
+                <p class="dContainer"><strong>الإسم :</strong> <input type="text" id="dName"></p>
+                <p class="dContainer"><strong>الحفظ :</strong> <input type="number" disabled id="dHifz"></p>
+                <p class="dContainer"><strong>التفسير :</strong> <input type="number" disabled id="dTafsir"></p>
+                <p class="dContainer"><strong>المراجعة :</strong> <input type="number" disabled id="dReview"></p>
+                <p class="dContainer"><strong>الحصة :</strong> <input type="number" id="dCourse"></p>
+                <p class="dContainer"><strong>درس التجويد :</strong> <input type="number" id="dTajwid"></p>
+                </div>
+                <!-- Catch Up Elements -->
+
+
+                <div>
+                <h4>إستدراك الطالبة:</h4>
+                <hr>
+                <p class="dContainer"><strong>الحفظ :</strong> <input type="number"  disabled id="dHifzCatchUp"></p>
+                <p class="dContainer"><strong>التفسير :</strong> <input type="number" disabled id="dTafsirCatchUp"></p>
+                <p class="dContainer"><strong>المراجعة :</strong> <input type="number" disabled id="dReviewCatchUp"></p>
+                <p class="dContainer"><strong> درس التجويد :</strong> <input type="number" id="dTajwidCatchUp"></p>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <div class="btn add-btn" style="margin-top: 15px;" id="save-btn">حفظ التغييرات</div>
+                <div class="btn clear-btn" style="margin-top: 15px;" id="delete-btn">حذف الطالبة</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
