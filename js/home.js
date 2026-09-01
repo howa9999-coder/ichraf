@@ -1,3 +1,60 @@
+// ============================================================
+// PWA INSTALL BUTTON LOGIC
+// ============================================================
+
+// Select the install button
+const installBtn = document.querySelector('#install-btn');
+
+// Store the deferred prompt so we can trigger it later
+ let deferredPrompt = null; 
+
+// Listen for the "beforeinstallprompt" event
+window.addEventListener("beforeinstallprompt", (installEvent) => {
+    // Prevent the browser from automatically showing the prompt
+    installEvent.preventDefault();
+
+    // Remove "display: none" inline style to show the button
+    installBtn.style.removeProperty('display');
+
+    // Save the event for later use
+    deferredPrompt = installEvent;
+}); 
+
+// When the user clicks the install button
+installBtn.addEventListener("click", () => {
+    if (deferredPrompt) {
+        // Show the install prompt
+        deferredPrompt.prompt();
+
+        // Wait for the user's choice
+        deferredPrompt.userChoice.then((choice) => {
+            if (choice.outcome === "accepted") {
+                console.log('User accepted installation');
+                // Hide the install button after install
+                installBtn.style.display = "none";
+            } else {
+                console.log('User refused installation');
+            }
+        });
+
+        // Reset the deferred prompt
+        deferredPrompt = null;
+    }
+}); 
+
+// ============================================================
+// SERVICE WORKER REGISTRATION
+// ============================================================
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register("./sw.js")
+        .then((reg) => {
+            console.log("Service Worker registered:", reg);
+        })
+        .catch((err) => {
+            console.log("Service Worker registration failed:", err);
+        });
+}
 const elements = {
     groupsContainer: document.getElementById('groupsContainer'),
     teacherNameInput: document.getElementById('teacher-name'),
