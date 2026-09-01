@@ -1,10 +1,10 @@
 //========Elements and Objects
-const cardsStorageObj ={
-    logs: JSON.parse(localStorage.getItem('logs')) || [],
-    cards: JSON.parse(localStorage.getItem('cards'))|| null,
-    index: JSON.parse(localStorage.getItem('index')) || 0
+const localStorageObj ={
+    groups: JSON.parse(localStorage.getItem('groups')) || [],
+    groupIndex: JSON.parse(localStorage.getItem('groupIndex')) || 0,
+    studentIndex: JSON.parse(localStorage.getItem('groupIndex')) || 0
 }
-
+const group = localStorageObj.groups[localStorageObj.groupIndex]
 const cardsElements = {
     addCardBtn: document.querySelector('#add-card'),
     selectInput: document.querySelector('#names'),
@@ -16,21 +16,20 @@ cardsElements.selectInput.innerHTML = ''
 
 //=========== Feed the select input 
 
-cardsStorageObj.logs.forEach((log, index) => {
+group.logs.forEach((log, index) => {
     cardsElements.selectInput.innerHTML += `<option value="${index}" >${log.name}</option>`
 });
 
-let studentCards = cardsStorageObj.cards[cardsStorageObj.index].cards
-let studentName = cardsStorageObj.cards[cardsStorageObj.index].name
-
+let studentCards = group.cards[localStorageObj.studentIndex].cards
+let studentName = group.cards[localStorageObj.studentIndex].name
 /* Load All Cards if available */
-cardsElements.selectInput.value = cardsStorageObj.index
+cardsElements.selectInput.value = localStorageObj.studentIndex
 
 //================= Function to display cards from the cards array, then to be used for delete 
 function cardsLoad(){
     cardsElements.cardsContainer.innerHTML=''
     studentCards.forEach((card, cardIndex) => {
-        renderCard(cardsStorageObj.index, studentName, cardIndex)
+        renderCard(localStorageObj.studentIndex, studentName, cardIndex)
     });
 }
 cardsLoad()
@@ -99,10 +98,10 @@ function renderCard(index, studentName, cardIndex){
 cardsElements.selectInput.addEventListener('change', function(){
     /* log the index */
     cardsElements.cardsContainer.innerHTML=''
-    cardsStorageObj.index = cardsElements.selectInput.value
-    localStorage.setItem('index', JSON.stringify(cardsStorageObj.index));
-    studentCards = cardsStorageObj.cards[cardsStorageObj.index].cards
-    studentName = cardsStorageObj.cards[cardsStorageObj.index].name
+    localStorageObj.studentIndex = cardsElements.selectInput.value
+    localStorage.setItem('studentIndex', JSON.stringify(localStorageObj.studentIndex));
+    studentCards = group.cards[localStorageObj.studentIndex].cards
+    studentName = group.cards[localStorageObj.studentIndex].name
     cardsLoad()
 })
 
@@ -117,7 +116,7 @@ function addCardFunction(e){
     }
 
     studentCards.push(cardEntry)
-    localStorage.setItem('cards', JSON.stringify(cardsStorageObj.cards));
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups));
     //let indexOfCard = card.length - 1
     cardsLoad()   
     handleClick(e, 'flash-success-btn', 50)
@@ -125,14 +124,12 @@ function addCardFunction(e){
 
 /* Clear All Cards of a Known Student */
 function clearCardFunction(e){
-    //console.log('test clear')
     studentCards=[]
-    cardsStorageObj.cards[cardsStorageObj.index].cards = studentCards
-    cardsStorageObj.logs[cardsStorageObj.index].hifz = 0
-    cardsStorageObj.logs[cardsStorageObj.index].tafsir = 0
-    cardsStorageObj.logs[cardsStorageObj.index].review = 0
-    localStorage.setItem('cards', JSON.stringify(cardsStorageObj.cards));
-    localStorage.setItem('logs', JSON.stringify(cardsStorageObj.logs));
+    group.cards[localStorageObj.studentIndex].cards = []
+    group.logs[localStorageObj.studentIndex].hifz = 0
+    group.logs[localStorageObj.studentIndex].tafsir = 0
+    group.logs[localStorageObj.studentIndex].review = 0
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups));
     cardsLoad()    
     handleClick(e, 'flash-warning-btn', 65)     
 }
@@ -141,12 +138,13 @@ function deleteCard(index, cardIndex, e){
     handleClick(e, 'flash-warning-btn', 65)
     removePoints(index, cardIndex)
     studentCards.splice(cardIndex, 1)
-    localStorage.setItem('cards', JSON.stringify(cardsStorageObj.cards)) 
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups)) 
     cardsLoad()
 }
-//================ Save changes function 
+//STOP================ Save changes function 
 function saveChanges(index, studentName,cardIndex, e){
-    let card = cardsStorageObj.cards[index].cards[cardIndex]
+    console.log(index)
+    let card = studentCards[cardIndex]
     // IF THE SESSION WAS NORMAL THEN THE STUDENT KEEP THE WHOLE POINT, IF IT IS NOT HE KEEP ONLY THE HALF OF IT
     let sessionValue = document.getElementById(`c-session-${studentName}-${cardIndex}`).value
     card.session = sessionValue
@@ -154,15 +152,14 @@ function saveChanges(index, studentName,cardIndex, e){
     card.tafsir = document.getElementById(`c-tafsir-${studentName}-${cardIndex}`).value / sessionValue
     card.review = document.getElementById(`c-review-${studentName}-${cardIndex}`).value / sessionValue
     card.company = document.getElementById(`c-company-${studentName}-${cardIndex}`).value 
-    localStorage.setItem('cards', JSON.stringify(cardsStorageObj.cards));  
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups));  
     addPoints(index)
     handleClick(e, 'flash-success-btn', 50)
 }
 
 //FUNCTION TO ADD NEW POINTS TO LOG
-function addPoints(index){
-    const studentCards = cardsStorageObj.cards[index].cards
-    const log = cardsStorageObj.logs[index]
+function addPoints(studentIndex){
+    const log = group.logs[studentIndex]
     // Reset all to 0, then start counting
     log.hifz = 0
     log.tafsir = 0
@@ -185,31 +182,37 @@ function addPoints(index){
         }
    
     }) 
-    companyEffect(index, studentCards) 
-    localStorage.setItem('logs', JSON.stringify(cardsStorageObj.logs))
+    companyEffect(studentIndex, studentCards) 
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups))
 }
 
 // TO DELETE POINTS WHEN THE THE USER DELETE THE CARD
-function removePoints(index, cardIndex){
-    const card = cardsStorageObj.cards[index].cards[cardIndex]
-    const log = cardsStorageObj.logs[index]
+function removePoints(studentIndex, cardIndex){
+    const card = studentCards[cardIndex]
+    const log = group.logs[studentIndex]
     if(card.session == 1){
         log.hifz -= Number(card.hifz)
         log.tafsir -= Number(card.tafsir)
         log.review -= Number(card.review)
+        log.fullReview = Number(log.fullReview) - 1
     }
     if(card.session == 2){
         log.hifzCatchUp -= Number(card.hifz)
         log.tafsirCatchUp -= Number(card.tafsir)
         log.reviewCatchUp -= Number(card.review)
     }
-    localStorage.setItem('logs', JSON.stringify(cardsStorageObj.logs))
+    localStorage.setItem('groups', JSON.stringify(localStorageObj.groups))
 }
 
 
 // COMPANY EFFECT FUNCTION, TO REMOVE 1 OR 0.5 POINT FROM REVIEW POINTS IF THE STUDENT DIDNT REVIEW WITH A COMPANY OVER 3 TIMES
-//===REDO THE COMPANY EFFECT FUNCTION TO BE SEPERATED BASED ON SESSION TYPE
-function companyEffect(index, studentCards){
+//=== RE READ THE COMPANY EFFECT FUNCTION END RE DO TO FIT THE NEW VARIABLES
+/*
+*******************************************************
+*********************************************************
+************************************************************* 
+ */
+function companyEffect(studentIndex, studentCards){
 
     const matchingCatchup = studentCards.filter(obj => obj.session == 2)
 
@@ -220,7 +223,7 @@ function companyEffect(index, studentCards){
     const sumCatchupCompany = matchingCatchup.reduce((acc, obj)=> Number(acc) + Number(obj.company), 0)
 
     if(countCatchup >= 3 && sumCatchupCompany < 3){
-        cardsStorageObj.logs[index].reviewCatchUp = cardsStorageObj.logs[index].reviewCatchUp - 0.5
+        group.logs[studentIndex].reviewCatchUp = group.logs[studentIndex].reviewCatchUp - 0.5
     }
 
     //==============================
@@ -234,7 +237,7 @@ function companyEffect(index, studentCards){
     const sumNormalCompany = matchingNormal.reduce((acc, obj)=> Number(acc) + Number(obj.company), 0)
 
     if(countNormal >= 3 && sumNormalCompany < 3){
-        cardsStorageObj.logs[index].review = cardsStorageObj.logs[index].review - 1
+        group.logs[studentIndex].review = group.logs[studentIndex].review - 1
     }
 
 }
