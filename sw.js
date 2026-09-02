@@ -1,7 +1,7 @@
 /* ===============================
    CACHE NAME (change version to force update)
    =============================== */
-const cacheName = 'ichraf-v0008';
+const cacheName = 'ichraf-v0009';
 
 /* ===============================
    FILES TO CACHE FOR OFFLINE USE
