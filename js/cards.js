@@ -14,7 +14,7 @@ const cardsElements = {
     clearCards: document.querySelector('#clear-cards')
 }
 cardsElements.selectInput.innerHTML = ''
-cardsElements.groupName.innerHTML = ` مجموعة <b>${group.name}</b> `
+cardsElements.groupName.innerHTML = `<a href='group.html' style='text-decoration: none;'> مجموعة <b>${group.name}</b> </a>`
 //=========== Feed the select input 
 
 group.logs.forEach((log, index) => {
@@ -73,10 +73,10 @@ function renderCard(index, studentName, cardIndex){
             <div class="select-container">
                 <label for="c-review">المراجعة:</label>
                 <select id="c-review-${studentName}-${cardIndex}">
-                    <option value="0" ${studentCard.review == 0? 'selected' : ''}>لا</option>
-                    <option value="1" ${studentCard.review == 1 || (studentCard.review == 0.5 && studentCard.session == 2)? 'selected' : ''}>نعم</option>  
-                    <option value="0.75" ${studentCard.review == 0.75 || studentCard.review == 0.375? 'selected' : ''}>تغيير</option>
-                    <option value="0.5" ${(studentCard.review == 0.5 && studentCard.session == 1) || studentCard.review == 0.25 ? 'selected' : ''}>نقصان</option>
+                    <option value="0" ${studentCard.review == 0? 'selected' : ''}>لم تتم المراجعة</option>
+                    <option value="1" ${studentCard.review == 1 || (studentCard.review == 0.5 && studentCard.session == 2)? 'selected' : ''}>مراجعة كاملة )مقدار المراجعة + الحفظ التراكمي(</option>  
+                    <option value="0.75" ${studentCard.review == 0.75 || studentCard.review == 0.375? 'selected' : ''}>تغيير مقدار المراجعة</option>
+                    <option value="0.5" ${(studentCard.review == 0.5 && studentCard.session == 1) || studentCard.review == 0.25 ? 'selected' : ''}>نقصان في مقدار المراجعة</option>
                 </select>
             </div>   
             <div class="select-container">
