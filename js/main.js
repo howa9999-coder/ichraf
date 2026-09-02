@@ -219,7 +219,6 @@ function reportHeader(){
         
         🌸 اسم المجموعة: ${groupName}🌸
         ➖➖➖➖➖➖➖
-        \n
     `
     return header
 }
@@ -228,13 +227,12 @@ function muaskarHeader(){
     let admin = localStorageObj.admin
     const header = `
     ⛱️ تقرير المعسكر الصيفي ⛱️ 
-    
+
      💕 مجموعة الأستاذة :${teacher}  
      💕 المُشرفة : ${admin} 
      __________
 
     ⭕ تنقيط الطّالبات ⭕  
-    \n
     `
     return header
 }
@@ -242,7 +240,6 @@ function muaskarHeader(){
 function reportFooter(){
     let teacher = group.teacher
     const footer = `
-    \n
         ➖➖➖➖➖➖➖
        ⭕  ${teacher} الأستاذة ⭕ 
         تم تصحيح الاستظهار: نعم
@@ -255,10 +252,8 @@ function reportFooter(){
 }
 function muaskarFooter(){
     const footer = `
-    \n
     __________
-    
-    تاج الوقار؛ حلمٌ يُدرك بالإخلاص والتعاهد والتكرارتاج الوقار؛ حلمٌ يُدرك بالإخلاص والتعاهد والتكرار
+    تاج الوقار؛ حلمٌ يُدرك بالإخلاص والتعاهد والتكرار
     `
     return footer
 }
