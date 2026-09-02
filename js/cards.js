@@ -195,7 +195,7 @@ function removePoints(studentIndex, cardIndex){
         log.hifz -= Number(card.hifz)
         log.tafsir -= Number(card.tafsir)
         log.review -= Number(card.review)
-        log.fullReview = Number(log.fullReview) - 1
+        log.fullReview -= Number(card.review)
     }
     if(card.session == 2){
         log.hifzCatchUp -= Number(card.hifz)
